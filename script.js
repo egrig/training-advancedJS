@@ -284,31 +284,109 @@ c) correct answer (I would use a number for this)
 11. Display the score in the console. Use yet another method for this.
 */
 
-var genericQuestion = {
-    question: '',
-    answers: [],
-    orrectAnswer: 1,
+//Global variable for score
+var score = 0;
 
+//Function prototype for question object
+var genericQuestion = function (question, answers, answer) {
+    this.question = question; 
+    this.answers = answers;
+    this.correctAnswer = answer;
 }
 
+//Prototype method to print object to console
+genericQuestion.prototype.printQuestion = function () {
+    //print question to console
+    console.log(this.question);
+    
+    //print all possible answers with number
+    for(i=0;i<this.answers.length; i++) {
+        console.log(i+1 + ': ' + this.answers[i]);
+    }
+}
+
+genericQuestion.prototype.printScore = function () {
+    console.log('Score: ' + score);
+}
+
+//Prompt the user to determine whether the correct answer was selected
+//If correctly selected, state so, if not, respond with correct answer
+genericQuestion.prototype.checkAnswer = function (userAnswer) {
+    if (userAnswer == this.correctAnswer) {
+        score += 1;
+        console.log("Correct answer was selected.");
+        this.printScore();
+        //console.log("***************************");
+        console.log('');
+    } else if (userAnswer != this.correctAnswer && userAnswer in this.answers) {
+        console.log('Incorrect answer. Correct answer is ' + (this.correctAnswer +1) + '.');
+        this.printScore();
+        //console.log("***************************");
+        console.log('');
+    } else {
+        console.log('Please choose an answer from the listed choices');
+        this.printScore();
+        //console.log("***************************");
+        console.log('');
+    }
+}
+/*
+(function (question, answers, answer) {
+    this.question = question; 
+    this.answers = answers;
+    this.correctAnswer = answer;
+    this.printQuestion = function () {
+        //print question to console
+        console.log(this.question);
+        
+        //print all possible answers with number
+        for(i=0;i<this.answers.length; i++) {
+            console.log(i+1 + ': ' + this.answers[i]);
+        }
+    }
+    this.checkAnswer = function (userAnswer) {
+        if (userAnswer == this.correctAnswer) {
+            console.log("Correct answer was selected.");
+        } else if (userAnswer != this.correctAnswer && userAnswer in this.answers) {
+            console.log('Incorrect answer. Correct answer is ' + this.correctAnswer + '.');
+        } else {
+            console.log('Please choose an answer from the listed choices');
+        }
+    }
+})('What country do you live in?',  ['Canada','USA', 'Israel', 'Ukraine'],  0);
+*/
+//Pick a number from 0 to 4 randomly
+function randomNumber () {
+    return Math.floor(Math.random() * 5);
+}
+
+//Create 5 questions
 var firstQuestion = new genericQuestion('What country do you live in?',  ['Canada','USA', 'Israel', 'Ukraine'],  0);
-var secondQuestion = new genericQuestion('What is yoru favourite food?',  ['Fish','Shrimp', 'Sushi', 'Humus'],  3);
+var secondQuestion = new genericQuestion('What is your favourite food?',  ['Fish','Shrimp', 'Sushi', 'Humus'],  3);
 var thirdQuestion = new genericQuestion('What city do you live in?',  ['Toronto','Stouffville', 'Markham', 'Ottawa'],  1);
 var fourthQuestion = new genericQuestion('What continent do you live in?',  ['Africa','North America', 'Asia', 'Europe'],  1);
-var fifthQuestion = new genericQuestion('What planet do you live in?',  ['Mars','Earth', 'Uranus', 'Venus'],  2);
+var fifthQuestion = new genericQuestion('What planet do you live in?',  ['Mars','Earth', 'Uranus', 'Venus'],  1);
 
+// create a question array so they can be randomly selected
 var questionArray = [firstQuestion, secondQuestion, thirdQuestion, fourthQuestion, fifthQuestion];
 
+nextRandomQuestion();
 
+//Function to choose the next random question
+function nextRandomQuestion () {
+    //Choose a random question and print it to console 
+    var randomNum = randomNumber();
+    questionArray[randomNum].printQuestion();
 
+    //Prompt user for answer, and get response
+    var userAnswer = prompt('Type the number of the correct answer.');
 
-
-
-
-
-
-
-
-
-
-
+    //If user chooses to exit, end question loop
+    if (userAnswer === 'exit') {
+        return;
+    } else {
+        //check answer and provide feedback to user
+        questionArray[randomNum].checkAnswer(userAnswer-1);
+        nextRandomQuestion();
+    }
+}
