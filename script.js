@@ -150,7 +150,7 @@ interviewQuestion('teacher')('Mark');
 
 */
 
-// IIFE
+// IIFE - Internally Invoked Function Expression
 /*
 function game() {
     var score = Math.random * 10;
